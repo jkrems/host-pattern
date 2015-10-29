@@ -1,0 +1,31 @@
+{
+  "name": "host-pattern",
+  "version": "0.0.0",
+  "description": "Summarize and expand host patterns",
+  "main": "index.js",
+  "scripts": {
+    "test": "eslint index.js test && mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jkrems/host-pattern.git"
+  },
+  "keywords": [
+    "host",
+    "pattern",
+    "glob"
+  ],
+  "author": "Jan Krems <jan.krems@gmail.com>",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/jkrems/host-pattern/issues"
+  },
+  "homepage": "https://github.com/jkrems/host-pattern#readme",
+  "devDependencies": {
+    "assertive": "^2.0.2",
+    "eslint": "^1.7.3",
+    "eslint-config-airbnb": "~0.1.0",
+    "mocha": "^2.3.3",
+    "npub": "^2.2.0"
+  }
+}
