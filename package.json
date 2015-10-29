@@ -16,6 +16,14 @@
     "glob"
   ],
   "author": "Jan Krems <jan.krems@gmail.com>",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "license": {
+      "exclude": [
+        "."
+      ]
+    }
+  },
   "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/jkrems/host-pattern/issues"
