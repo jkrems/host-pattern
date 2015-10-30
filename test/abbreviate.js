@@ -22,6 +22,22 @@ describe('abbreviate', function() {
     assert.equal('abc,host,xy', abbreviate([ 'abc', 'host', 'xy' ]));
   });
 
+  it('complains about non-arrays', function() {
+    var error;
+
+    error = assert.throws(function() { abbreviate(); });
+    assert.equal('abbreviate(string[]): `undefined` is not an array', error.message);
+
+    error = assert.throws(function() { abbreviate(42); });
+    assert.equal('abbreviate(string[]): `42` is not an array', error.message);
+
+    error = assert.throws(function() { abbreviate({}); });
+    assert.equal('abbreviate(string[]): `[object Object]` is not an array', error.message);
+
+    error = assert.throws(function() { abbreviate('host'); });
+    assert.equal('abbreviate(string[]): `host` is not an array', error.message);
+  });
+
   it('complains about invalid hosts', function() {
     var error;
 

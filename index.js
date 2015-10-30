@@ -138,6 +138,9 @@ function addHostToGroup(host) {
 }
 
 function abbreviate(hosts) {
+  if (!Array.isArray(hosts)) {
+    throw new TypeError('abbreviate(string[]): `' + hosts + '` is not an array');
+  }
   if (hosts.length < 1) return '';
 
   var sets = {};
