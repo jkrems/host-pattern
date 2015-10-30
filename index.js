@@ -114,7 +114,7 @@ function buildRanges(members) {
   return '<' + ranges.join(',') + '>';
 }
 
-function addHostToGroup(groups, host) {
+function addHostToGroup(host) {
   var match = host.match(HOST);
   if (!match) {
     throw new Error('Invalid host: ' + JSON.stringify(host));
@@ -125,26 +125,24 @@ function addHostToGroup(groups, host) {
   var key = prefix + postfix;
 
   if (index === '') {
-    groups.simple.push(prefix + postfix);
-    return groups;
+    this.simple.push(prefix + postfix);
+    return this;
   }
 
-  var group = groups.sets[key] = groups.sets[key] || {
+  var group = this.sets[key] = this.sets[key] || {
     prefix: prefix,
     postfix: postfix,
     members: [],
   };
   group.members.push(+index);
-
-  return groups;
 }
 
 function abbreviate(hosts) {
-  if (hosts.length < 1) return undefined;
+  if (hosts.length < 1) return '';
 
   var sets = {};
   var simple = [];
-  hosts.reduce(addHostToGroup, { sets: sets, simple: simple });
+  hosts.forEach(addHostToGroup, { sets: sets, simple: simple });
 
   function abbreviateGroup(key) {
     var group = sets[key];

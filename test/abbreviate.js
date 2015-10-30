@@ -3,10 +3,15 @@
 var assert = require('assertive');
 
 var abbreviate = require('../').abbreviate;
+var expand = require('../').expand;
 
 describe('abbreviate', function() {
-  it('is undefined for an empty list', function() {
-    assert.equal(undefined, abbreviate([]));
+  it('is an empty string for an empty list', function() {
+    assert.equal('', abbreviate([]));
+  });
+
+  it('can get back the empty list', function() {
+    assert.deepEqual([], expand(abbreviate([])));
   });
 
   it('is the first element for a one element list', function() {
