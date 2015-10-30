@@ -1,5 +1,7 @@
 'use strict';
 
+function byNumeric(a, b) { return a - b; }
+
 function flatten(array) {
   return [].concat.apply([], array);
 }
@@ -26,9 +28,10 @@ var GROUP = new RegExp([
   '<([^>]*)>', // We capture the actual range expression
   ')?',
   // The trailing part is optional
-  '([^,;\\s]+)?',
+  '([^,;\\s]*)',
   ')', // end of actual group
 ].join(''), 'g');
+var HOST = /^([^\d,;\s<>]+)(\d*)([^,;\s<>]*)$/;
 
 function parseSubRange(subRange) {
   var parts = subRange.split(/\s*-\s*/);
@@ -49,7 +52,7 @@ function parseRange(range) {
 function parseGroup(match) {
   var prefix = match[1];
   var range = match[2];
-  var postfix = match[3] || '';
+  var postfix = match[3];
 
   if (/[<>]/.test(postfix)) {
     if (range) {
@@ -81,3 +84,79 @@ function expand(pattern) {
   return flatten(groups);
 }
 exports.expand = expand;
+
+function buildRanges(members) {
+  var ranges = [];
+  var start = members.shift();
+  var end = start;
+  var current;
+
+  if (!start) return '';
+  if (!members.length) return '' + start;
+
+  function emitRange() {
+    if (!start) return;
+    ranges.push(start === end ? ('' + start) : (start + '-' + end));
+  }
+
+  do {
+    current = members.shift();
+    if (current === end + 1) {
+      end = current;
+    } else {
+      emitRange();
+      start = end = current;
+    }
+  } while (members.length);
+
+  emitRange();
+
+  return '<' + ranges.join(',') + '>';
+}
+
+function addHostToGroup(host) {
+  var match = host.match(HOST);
+  if (!match) {
+    throw new Error('Invalid host: ' + JSON.stringify(host));
+  }
+  var prefix = match[1];
+  var index = match[2];
+  var postfix = match[3];
+  var key = prefix + postfix;
+
+  if (index === '') {
+    this.simple.push(prefix + postfix);
+    return this;
+  }
+
+  var group = this.sets[key] = this.sets[key] || {
+    prefix: prefix,
+    postfix: postfix,
+    members: [],
+  };
+  group.members.push(+index);
+}
+
+function abbreviate(hosts) {
+  if (!Array.isArray(hosts)) {
+    throw new TypeError('abbreviate(string[]): `' + hosts + '` is not an array');
+  }
+  if (hosts.length < 1) return '';
+
+  var sets = {};
+  var simple = [];
+  hosts.forEach(addHostToGroup, { sets: sets, simple: simple });
+
+  function abbreviateGroup(key) {
+    var group = sets[key];
+    var members = group.members.sort(byNumeric);
+    return group.prefix + buildRanges(members) + group.postfix;
+  }
+
+  return Object.keys(sets)
+    .map(abbreviateGroup)
+    .concat(simple)
+    .sort()
+    .join(',');
+}
+exports.abbreviate = abbreviate;
