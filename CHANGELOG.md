@@ -1,3 +1,8 @@
+1.1.1
+-----
+* Only publish index.js - @jkrems
+  https://github.com/jkrems/host-pattern/pull/3
+
 1.1.0
 -----
 * Added `abbreviate(hosts: string[])` - @jkrems
