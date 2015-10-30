@@ -31,7 +31,7 @@ var GROUP = new RegExp([
   '([^,;\\s]*)',
   ')', // end of actual group
 ].join(''), 'g');
-var HOST = /^([^\d,;\s<>]+)([\d]*)([^,;\s<>]*)$/;
+var HOST = /^([^\d,;\s<>]+)(\d*)([^,;\s<>]*)$/;
 
 function parseSubRange(subRange) {
   var parts = subRange.split(/\s*-\s*/);
