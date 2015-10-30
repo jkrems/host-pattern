@@ -34,6 +34,12 @@ describe('abbreviate', function() {
     assert.equal('a,bc<1-2>,be', abbreviate([ 'bc1', 'be', 'bc2', 'a' ]));
   });
 
+  it('does\'t swallow hosts when a non-numbered variant exists', function() {
+    assert.equal('a<1,3>b,ab,x,x<2,4>', abbreviate([
+      'a1b', 'a3b', 'ab', 'x2', 'x4', 'x',
+    ]));
+  });
+
   it('collapses hosts that only vary by a number', function() {
     assert.equal('host<1,3>-4-u.com', abbreviate([
       'host1-4-u.com',

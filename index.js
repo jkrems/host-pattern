@@ -124,12 +124,17 @@ function addHostToGroup(groups, host) {
   var postfix = match[3];
   var key = prefix + postfix;
 
-  var group = groups[key] = groups[key] || {
+  if (index === '') {
+    groups.simple.push(prefix + postfix);
+    return groups;
+  }
+
+  var group = groups.sets[key] = groups.sets[key] || {
     prefix: prefix,
     postfix: postfix,
     members: [],
   };
-  if (index !== '') group.members.push(+index);
+  group.members.push(+index);
 
   return groups;
 }
@@ -137,16 +142,19 @@ function addHostToGroup(groups, host) {
 function abbreviate(hosts) {
   if (hosts.length < 1) return undefined;
 
-  var groups = hosts.reduce(addHostToGroup, {});
+  var sets = {};
+  var simple = [];
+  hosts.reduce(addHostToGroup, { sets: sets, simple: simple });
 
   function abbreviateGroup(key) {
-    var group = groups[key];
+    var group = sets[key];
     var members = group.members.sort(byNumeric);
     return group.prefix + buildRanges(members) + group.postfix;
   }
 
-  return Object.keys(groups)
+  return Object.keys(sets)
     .map(abbreviateGroup)
+    .concat(simple)
     .sort()
     .join(',');
 }
