@@ -1,3 +1,8 @@
+1.1.2
+-----
+* Add type definitions - @dbushong
+  https://github.com/jkrems/host-pattern/pull/4
+
 1.1.1
 -----
 * Only publish index.js - @jkrems
